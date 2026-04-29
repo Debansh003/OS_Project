@@ -87,10 +87,42 @@
 
         <div class="controls">
           <button class="ctrl-btn primary" id="btn-add" onclick="addObject()">＋ Allocate Object</button>
-          <button class="ctrl-btn" id="btn-link" onclick="addReference()">→ Add Reference</button>
-          <button class="ctrl-btn" id="btn-remove" onclick="removeReference()">✕ Remove Reference</button>
+
+          <div class="ref-builder" id="ref-builder">
+            <div class="ref-builder-label">Custom Reference</div>
+            <div class="ref-row">
+              <select id="ref-from" class="ref-select"><option value="">From…</option></select>
+              <span class="ref-arrow-icon">→</span>
+              <select id="ref-to" class="ref-select"><option value="">To…</option></select>
+            </div>
+            <div class="ref-row">
+              <button class="ctrl-btn small primary" onclick="addCustomReference()">Add Ref</button>
+              <button class="ctrl-btn small danger" onclick="removeCustomReference()">Remove Ref</button>
+            </div>
+          </div>
+
+          <div class="speed-row">
+            <span class="speed-label">Speed</span>
+            <input type="range" id="speed-slider" min="1" max="5" value="2" class="speed-slider" oninput="updateSpeed(this.value)">
+            <span class="speed-val" id="speed-val">Slow</span>
+          </div>
+
           <button class="ctrl-btn danger" id="btn-gc" onclick="runGC()">▶ Run GC</button>
           <button class="ctrl-btn ghost" onclick="resetViz()">↺ Reset</button>
+        </div>
+
+        <!-- STEP EXPLAINER -->
+        <div class="step-panel" id="step-panel">
+          <div class="step-header">
+            <span class="step-label">GC Step</span>
+            <span class="step-phase" id="step-phase">Idle</span>
+          </div>
+          <div class="step-title" id="step-title">Ready to run</div>
+          <div class="step-desc" id="step-desc">Allocate objects and set up references, then click Run GC to begin the step-by-step walkthrough.</div>
+          <div class="step-progress" id="step-progress-wrap" style="display:none">
+            <div class="step-bar"><div class="step-fill" id="step-fill"></div></div>
+            <span class="step-count" id="step-count"></span>
+          </div>
         </div>
 
         <div class="log-panel">
