@@ -88,7 +88,7 @@
         <div class="controls">
           <button class="ctrl-btn primary" id="btn-add" onclick="addObject()">＋ Allocate Object</button>
 
-          <div class="ref-builder" id="ref-builder">
+          <div class="ref-builder">
             <div class="ref-builder-label">Custom Reference</div>
             <div class="ref-row">
               <select id="ref-from" class="ref-select"><option value="">From…</option></select>
@@ -96,13 +96,13 @@
               <select id="ref-to" class="ref-select"><option value="">To…</option></select>
             </div>
             <div class="ref-row">
-              <button class="ctrl-btn small primary" onclick="addCustomReference()">Add Ref</button>
-              <button class="ctrl-btn small danger" onclick="removeCustomReference()">Remove Ref</button>
+              <button class="ctrl-btn small primary" onclick="addCustomRef()">＋ Add</button>
+              <button class="ctrl-btn small danger" onclick="removeCustomRef()">✕ Remove</button>
             </div>
           </div>
 
           <div class="speed-row">
-            <span class="speed-label">Speed</span>
+            <span class="speed-label">⏱ Speed</span>
             <input type="range" id="speed-slider" min="1" max="5" value="2" class="speed-slider" oninput="updateSpeed(this.value)">
             <span class="speed-val" id="speed-val">Slow</span>
           </div>
@@ -114,14 +114,13 @@
         <!-- STEP EXPLAINER -->
         <div class="step-panel" id="step-panel">
           <div class="step-header">
-            <span class="step-label">GC Step</span>
-            <span class="step-phase" id="step-phase">Idle</span>
+            <span class="step-tag" id="step-tag">IDLE</span>
           </div>
-          <div class="step-title" id="step-title">Ready to run</div>
-          <div class="step-desc" id="step-desc">Allocate objects and set up references, then click Run GC to begin the step-by-step walkthrough.</div>
-          <div class="step-progress" id="step-progress-wrap" style="display:none">
+          <div class="step-title" id="step-title">Ready to begin</div>
+          <div class="step-desc" id="step-desc">Allocate objects, build your reference graph, then click Run GC to watch the algorithm execute step-by-step with explanations.</div>
+          <div class="step-progress-wrap" id="step-progress-wrap" style="display:none">
             <div class="step-bar"><div class="step-fill" id="step-fill"></div></div>
-            <span class="step-count" id="step-count"></span>
+            <span class="step-count" id="step-count">0 / 0</span>
           </div>
         </div>
 
