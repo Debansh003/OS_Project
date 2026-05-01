@@ -106,7 +106,7 @@ window.addEventListener('resize', resizeCanvas);
 class GCObject {
   constructor(x, y, id, gen='young') {
     this.id=id; this.x=x; this.y=y;
-    this.vx=(Math.random()-.5)*.4; this.vy=(Math.random()-.5)*.4;
+    this.vx=0; this.vy=0;
     this.r=32; this.refCount=0; this.marked=false;
     this.state='active'; this.gen=gen; this.age=0;
     this.isRoot=false; this.label='O'+id;
@@ -188,33 +188,7 @@ class GCObject {
   }
 
   update() {
-    if (this.state==='freed') return;
-    this.x+=this.vx; this.y+=this.vy;
-    this.vx*=.992; this.vy*=.992;
-    const p=this.r+20;
-    if (this.x<p){this.x=p;this.vx=Math.abs(this.vx)*.7;}
-    if (this.x>W-p){this.x=W-p;this.vx=-Math.abs(this.vx)*.7;}
-
-    if (currentAlgo==='generational') {
-      const mid=H*.52;
-      if (this.gen==='young'){
-        if(this.y<p){this.y=p;this.vy=Math.abs(this.vy)*.7;}
-        if(this.y>mid-p){this.y=mid-p;this.vy=-Math.abs(this.vy)*.7;}
-      } else {
-        if(this.y<mid+p){this.y=mid+p;this.vy=Math.abs(this.vy)*.7;}
-        if(this.y>H-p){this.y=H-p;this.vy=-Math.abs(this.vy)*.7;}
-      }
-    } else {
-      if(this.y<p){this.y=p;this.vy=Math.abs(this.vy)*.7;}
-      if(this.y>H-p){this.y=H-p;this.vy=-Math.abs(this.vy)*.7;}
-    }
-
-    for (const o of objects) {
-      if (o===this||o.state==='freed') continue;
-      const dx=this.x-o.x, dy=this.y-o.y, d=Math.hypot(dx,dy);
-      const min=(this.r+o.r)*2.8;
-      if(d<min&&d>.1){const f=(min-d)/min*.06;this.vx+=dx/d*f;this.vy+=dy/d*f;}
-    }
+    // objects are static — no movement
   }
 }
 
@@ -639,7 +613,6 @@ async function runGenerational() {
       setStep('STEP 1 / 4','Promoting '+obj.label+' to old generation',
         obj.label+' has survived '+obj.age+' GC cycles — it is clearly long-lived. Moving it to the old generation. It will only be collected during a rare, expensive major GC. This is how generational GC avoids scanning long-lived objects on every cycle.');
       obj.gen='old';
-      obj.vy=3;
       obj.y=Math.min(obj.y+80, H*.52+80);
       log('  ↑ Promoting '+obj.label+' to old gen','success');
       promoted++;
@@ -761,7 +734,6 @@ canvas.addEventListener('click', e=>{
       log('Inspect '+obj.label+': state='+obj.state+' rc='+obj.refCount+' gen='+obj.gen+' age='+obj.age+' root='+obj.isRoot+' in='+inc+' out='+out,'info');
       setStep('INSPECT',obj.label+' — '+obj.state,
         'State: '+obj.state+' | RefCount: '+obj.refCount+' | Generation: '+obj.gen+' | Age: '+obj.age+' | Root: '+obj.isRoot+' | Incoming refs: '+inc+' | Outgoing refs: '+out);
-      obj.vx+=(Math.random()-.5)*3; obj.vy+=(Math.random()-.5)*3;
       return;
     }
   }
