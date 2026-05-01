@@ -156,7 +156,7 @@ class GCObject {
 
     // main label
     ctx.fillStyle=C.text; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.font="bold 12px 'Inter',sans-serif
+    ctx.font="bold 12px 'Inter',sans-serif"; ctx.fillText(this.label, 0, -6);
     ctx.font="bold 12px 'Inter',monospace";
     ctx.fillText(this.label, 0, -6);
 
