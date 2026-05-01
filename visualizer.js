@@ -86,12 +86,12 @@ const algoMeta = {
 
 // ---- COLORS ----
 const C = {
-  active:'#2ed573', marked:'#ffd32a', dead:'#ff4757',
-  freed:'#2a2a42', freeing:'#ff6b81',
-  young:'#00f5c4', old:'#7c4dff', root:'#74b9ff',
-  scanning:'#ff9f43',
-  edge:'rgba(255,255,255,0.18)', edgeOn:'rgba(0,245,196,0.6)',
-  edgePulse:'#ffd32a', bg:'#141420', text:'#e8e8f0'
+  active:'#1d8348', marked:'#b7860a', dead:'#c0392b',
+  freed:'#d1d1d6', freeing:'#e74c3c',
+  young:'#0071e3', old:'#6e3ff3', root:'#0071e3',
+  scanning:'#ff6b00',
+  edge:'rgba(0,0,0,0.12)', edgeOn:'rgba(0,113,227,0.5)',
+  edgePulse:'#b7860a', bg:'#f5f5f7', text:'#1d1d1f'
 };
 
 // ---- RESIZE ----
@@ -156,11 +156,12 @@ class GCObject {
 
     // main label
     ctx.fillStyle=C.text; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.font="bold 13px 'Space Mono',monospace";
+    ctx.font="bold 12px 'Inter',sans-serif
+    ctx.font="bold 12px 'Inter',monospace";
     ctx.fillText(this.label, 0, -6);
 
     // sub-label
-    ctx.font="10px 'Space Mono',monospace"; ctx.fillStyle=col;
+    ctx.font="10px 'JetBrains Mono',monospace"; ctx.fillStyle=col;
     if (currentAlgo==='refcount') ctx.fillText('rc:'+this.refCount,0,8);
     else if (currentAlgo==='generational') ctx.fillText(this.gen==='old'?'OLD':'YOUNG',0,8);
     else if (this.state==='marked') { ctx.fillStyle=C.marked; ctx.fillText('✓ live',0,8); }
@@ -174,14 +175,14 @@ class GCObject {
       else ctx.rect(-18,r+5,36,14);
       ctx.fill();
       ctx.fillStyle='#0a0a0f';
-      ctx.font="bold 8px 'Space Mono',monospace";
+      ctx.font="bold 8px 'JetBrains Mono',monospace";
       ctx.fillText('ROOT',0,r+12);
     }
 
     // age badge
     if (currentAlgo==='generational' && this.age>0) {
       ctx.fillStyle=col+'99';
-      ctx.font="9px 'Space Mono',monospace";
+      ctx.font="9px 'JetBrains Mono',monospace";
       ctx.fillText('age:'+this.age, 0, r+(this.isRoot?26:14));
     }
     ctx.restore();
@@ -227,7 +228,7 @@ function drawEdges(t) {
 
     // edge label mid-point
     ctx.save();
-    ctx.font="9px 'Space Mono',monospace";
+    ctx.font="9px 'JetBrains Mono',monospace";
     ctx.fillStyle=isPulse?C.edgePulse:'rgba(255,255,255,0.22)';
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(a.label+'→'+b.label, (sx+ex)/2, (sy+ey)/2-10);
@@ -240,23 +241,23 @@ function render(t=0) {
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
 
-  // grid
-  ctx.strokeStyle='rgba(255,255,255,0.02)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // subtle grid
+  ctx.strokeStyle='rgba(0,0,0,0.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
 
   // generational zones
   if (currentAlgo==='generational') {
     const mid=H*.52;
-    ctx.fillStyle='rgba(0,245,196,0.025)'; ctx.fillRect(0,0,W,mid);
-    ctx.fillStyle='rgba(124,77,255,0.025)'; ctx.fillRect(0,mid,W,H-mid);
-    ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
-    ctx.setLineDash([10,10]);
+    ctx.fillStyle='rgba(0,113,227,0.04)'; ctx.fillRect(0,0,W,mid);
+    ctx.fillStyle='rgba(110,63,243,0.04)'; ctx.fillRect(0,mid,W,H-mid);
+    ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
+    ctx.setLineDash([8,8]);
     ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();
     ctx.setLineDash([]);
-    ctx.font="11px 'Space Mono',monospace"; ctx.textAlign='left';
-    ctx.fillStyle='rgba(0,245,196,0.35)'; ctx.fillText('▲  YOUNG GENERATION',14,22);
-    ctx.fillStyle='rgba(124,77,255,0.35)'; ctx.fillText('▼  OLD GENERATION (TENURED)',14,mid+22);
+    ctx.font="11px 'JetBrains Mono',monospace"; ctx.textAlign='left';
+    ctx.fillStyle='rgba(0,113,227,0.5)'; ctx.fillText('▲  YOUNG GENERATION',14,22);
+    ctx.fillStyle='rgba(110,63,243,0.5)'; ctx.fillText('▼  OLD GENERATION (TENURED)',14,mid+22);
   }
 
   drawEdges(t);
